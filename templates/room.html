@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatroom</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+</head>
+<style>
+    .img {
+        background-image: url("https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1000");
+        opacity: 1;
+        background-size: cover; 
+        background-repeat: no-repeat; 
+        background-position: center; 
+        height: 900px;
+        filter: blur(8px);
+    }  
+    .msg {
+        overflow-y: scroll;
+        background: linear-gradient(rgba(87, 87, 183, 0.465), blue);
+        max-height: 80vh;
+        margin: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        color: rgba(255, 36, 36, 0.382);
+        width: 50%;
+    }
+    h3 {
+        text-align: center;
+        color: white;
+    }
+    .input {
+        text-align: center;
+        margin: 20px;
+    }
+    #message-input {
+        width: 80%;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+    }
+    #send-btn {
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #5757b7;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+
+    <div class="img">
+
+    </div>
+<body>
+    <div class="msg-box">
+        <h3>
+            Your chat room {{ room }}
+        </h3>
+        <div class="msg" id="messages">
+        </div>
+    </div>
+
+
+    <div class="input">
+        <input type="text" placeholder="Message" id="message-input">
+        <button type="button" id="send-btn" onClick="sendMessage()">Send</button>
+    </div>
+    <script type="text/javascript">
+        var socket = io();
+
+        const messages = document.getElementById("messages");
+
+        const createMessage = (name, msg) => {
+            const content = `
+                <div class="text">
+                    <span>
+                        <strong>${name}</strong>: ${msg}
+                    </span>
+                    <span class="muted">
+                        ${new Date().toLocaleString()}
+                    </span>
+                </div>
+            `;
+            messages.innerHTML += content;
+        };
+
+        socket.on("message", (data) => {
+            createMessage(data.name, data.message);
+        });
+
+        const sendMessage = () => {
+            const messageInput = document.getElementById("message-input");
+            const message = messageInput.value;
+            if (message === "") return;
+            socket.emit("message", { data: message });
+            messageInput.value = "";
+        };
+    </script>
+</body>
+</html>
