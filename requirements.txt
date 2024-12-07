@@ -1,7 +1,8 @@
 Flask==2.3.3
 Flask-SocketIO==5.3.4
 gunicorn==20.1.0
-pip install --upgrade gunicorn
-pip install --upgrade eventlet
 eventlet==0.33.3
 dnspython==2.2.1
+gunicorn --version
+eventlet --version
+
